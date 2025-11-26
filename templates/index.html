@@ -3,31 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Título da página</title>
-    
+    <title>Gerando arquivo json</title>
     <style>
         body {
-          font-family: Tahoma, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
         }
 
-        .placar {
-            border-radius: 50px;
-            background: #074c9b;
-            padding: 5px; 
-            width: 15%;
-            text-align: center;
-            color: white;
-            font-size: 24px;
-            /*height: 150px;*/
+        .right-half {
+            flex: 1;                /* Each takes up 50% of the width */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: black;
+            background-color: #ff9966;
         }
 
-        .novaQuestao {
+        .left-half {
+            flex: 1;               /* Each takes up 50% of the width */
+            /*display: flex;*/
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            color: black;
+            background-color: #6699ff;
+        }
+
+        .left-box {
+            border: 2px solid black;
+            padding: 20px;
+            margin: 20px;
+            background-color: #ffffff;
+        }
+
+        .button {
             display: block;
             margin-left: auto;
             margin-right: auto;
-            /*display: inline-block;*/
             padding: 15px 25px;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
             text-align: center;
             text-decoration: none;
@@ -38,229 +54,91 @@
             border-radius: 15px;
             box-shadow: 0 9px #999;
             width: 50%;
+            height: 8%;
         }
 
-        .novaQuestao:hover {background-color: #3e8e41}
+        .button:hover {background-color: #3e8e41}
 
-        .novaQuestao:active {
+        .button:active {
             background-color: #3e8e41;
             box-shadow: 0 5px #666;
             transform: translateY(4px);
         }
-        
-        .alternativa {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            background-color: white;
-            border: 1px solid #555555;
-            color: black;
-            transition-duration: 0.4s;
-            cursor: pointer;
-            width: 50%;
-            text-align: left;
-        }
-        .alternativa:hover {
-            background-color: #0066ff;
-            color: white;
-        }
 
-        .campoResposta {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 25%;
-        }
-
-        .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .box {
-            position: absolute;
-            text-align: center;
-            bottom: -100px;  /* Start off-screen at the bottom */
-            left: 50%;       /* Optional: Center horizontally */
-            transform: translateX(-50%); /* Optional: Exact centering */
-            background-color: lightcoral;
-            padding: 20px;
-            color: white;
-            visibility: hidden;  /* Initially hidden */
-            opacity: 0; /* Initially invisible */
-            transition: bottom 0.5s ease, opacity 0.5s ease;  /* Smooth transition */
+        textarea {
+            width: 100%;           /* fill the container */
+            box-sizing: border-box;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Se você está vendo isso, houve um problema na chamada de config.json</h1>
-        <div class="placar" id="placar">
-            <p>Placar: <a id="certas">0</a>/<a id="feitas">0</a></p>
+    <div class="left-half">
+        <div class="left-box">
+            Texto da pergunta<br>
+            <textarea id="pergunta" name="pergunta" rows="4" cols="50" placeholder="Qual é a raiz quadrada de 25?"></textarea>
+            <p>Alternativa A:<br>
+            <textarea id="alternativaA" name="alternativaA" rows="1" cols="50" placeholder="3"></textarea>
+            <p>Alternativa B:</p>
+            <textarea id="alternativaB" name="alternativaB" rows="1" cols="50" placeholder="4"></textarea> 
+            <p>Alternativa C:</p>
+            <textarea id="alternativaC" name="alternativaC" rows="1" cols="50" placeholder="5"></textarea> 
+            <p>Alternativa D:</p>
+            <textarea id="alternativaD" name="alternativaD" rows="1" cols="50" placeholder="6"></textarea> 
+            <p>Resposta Correta:</p>
+            <textarea id="resposta" name="resposta" rows="1" cols="50" placeholder="c"></textarea> 
         </div>
+
+        <button class="button" onclick="addQuestao()">Adicionar Questão</button>
+        <br><br>
     </div>
-        
-    <div class="corpo" id="minhacaixa">
-        <i><p id="enunciado">Primeira Questão vai aqui</p></i>
-        <button class="alternativa" onclick="checaResposta('a')"><p id="a">VERDADEIRO</p></button><br>
-        <button class="alternativa" onclick="checaResposta('b')"><p id="b">FALSO</p></button><br>
-        <button class="alternativa" onclick="checaResposta('c')"><p id="c"></p></button><br>
-        <button class="alternativa" onclick="checaResposta('d')"><p id="d"></p></button><br>
-        <br>
-        <p id="campoResposta" class="campoResposta"></p>
+    <div class="right-half">
+        <div class="right-box">
+            <textarea id="arquivo" name="arquivo" rows="30" cols="80" placeholder="3"></textarea>
+        </div>
+
+        <p></p>
+        <br><br>
     </div>
-    <button class="novaQuestao" onclick="PegaQuestao()">Nova questão</button>
 
-    <div class="box" id="box">
-        Parabéns, você acertou 10 questões direto!
-        <br>
-        <img id="parabens" src="https://upload.wikimedia.org/wikipedia/en/5/5c/Mario_by_Shigehisa_Nakaue.png" width="250" height="300">
-    </div>
-<script>
-    let respostaGlobal = 'a';
-    let totalQuestoesFeitas = 0;
-    let totalQuestoesCertas = 0;
-    let certasDireto = 0;
-    let todasAsQuestoes;
+    <script>
+        async function addQuestao() {
+            // pegando os valores dos campos
+            let pergunta = document.getElementById(`pergunta`).value;
+            let alternativaA = document.getElementById(`alternativaA`).value;
+            let alternativaB = document.getElementById(`alternativaB`).value;
+            let alternativaC = document.getElementById(`alternativaC`).value;
+            let alternativaD = document.getElementById(`alternativaD`).value;
+            let resposta = document.getElementById(`resposta`).value;
 
-    document.addEventListener("DOMContentLoaded", function () {
-        PegaQuestoes();
-        initialize();
-    });
+            // escrevendo no console (para testes)
+            console.log(pergunta, alternativaA, alternativaB, alternativaC, alternativaD, resposta);
 
-    async function initialize() {
-        try {
-            // Fetch data from the server
-            const response = await fetch("http://127.0.0.1:5000/config");
+            // modelo de questão em json
+            let questao = {
+                "pergunta": pergunta,
+                    "a": alternativaA,
+                    "b": alternativaB,
+                    "c": alternativaC,
+                    "d": alternativaD,
+                "resposta": resposta
+            };
 
-            // Parse the response as JSON
-            const config = await response.json();
+            // pegando o valor da textarea do arquivo
+            let arquivo = document.getElementById("arquivo").value;
 
-            // Configurando o título da página
-            document.title = config.title;
-
-            // Configurando o h1
-            const h1 = document.querySelector("h1");
-            h1.textContent = config.header;
-
-            // cor da página
-            document.body.style.backgroundColor = config.background_color;
-
-            // cor do placar
-            const elements = document.querySelectorAll('.placar');
-            elements.forEach(el => {
-                el.style.background = config.cor_placar;
-            });
-
-            // imagem de parabéns
-            const imgParabens = document.getElementById("parabens");
-            imgParabens.src = config.imagem_de_parabens;
-            imgParabens.width  = config.parabensWidth;
-            imgParabens.height = config.parabensHeight;
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
-
-    async function PegaQuestoes() {
-        try {
-            // Fetch data from the server
-            const response = await fetch("http://127.0.0.1:5000/data");
-
-            // Parse the response as JSON
-            todasAsQuestoes = await response.json();
-
-            // popula página pela primeira vez
-            await PegaQuestao();
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
-
-    async function PegaQuestao() {
-        try {
-            document.getElementById("campoResposta").innerHTML = "";
-
-            // Get a random question
-            const randomIndex = Math.floor(Math.random() * todasAsQuestoes.length);
-            const enunciado = todasAsQuestoes[randomIndex]['enunciado'];
-            const opcao_a = "A - " + todasAsQuestoes[randomIndex]['a'];
-            const opcao_b = "B - " + todasAsQuestoes[randomIndex]['b'];
-            const opcao_c = "C - " + todasAsQuestoes[randomIndex]['c'];
-            const opcao_d = "D - " + todasAsQuestoes[randomIndex]['d'];
-            const resposta = todasAsQuestoes[randomIndex]['resposta'];
-
-            // Log the random question
-            //console.log(resposta);
-
-            // Update the HTML with the random question (if desired)
-            // Uncomment the following lines if you have elements with these IDs:
-            document.getElementById("enunciado").innerHTML = enunciado;
-            document.getElementById("a").innerHTML = opcao_a;
-            document.getElementById("b").innerHTML = opcao_b;
-            document.getElementById("c").innerHTML = opcao_c;
-            document.getElementById("d").innerHTML = opcao_d;
-            respostaGlobal = resposta;
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
-
-    async function checaResposta(respostaDoAluno) {
-        try {
-            console.log(certasDireto);
-            if (respostaDoAluno == respostaGlobal) {
-                //alert("Acertou!");
-                totalQuestoesFeitas += 1;
-                totalQuestoesCertas += 1;
-                certasDireto += 1;
-                document.getElementById("feitas").innerHTML = totalQuestoesFeitas;
-                document.getElementById("certas").innerHTML = totalQuestoesCertas;
-                document.getElementById("campoResposta").innerHTML = "Parabéns! Você acertou!";
+            // escrevendo na textarea do arquivo
+            if (arquivo.length == 0) {
+                console.log("arquivo vazio");
+                arquivo = "[" + JSON.stringify(questao, null, 4) + "]";
             } else {
-                //alert("Errou!");
-                totalQuestoesFeitas += 1;
-                certasDireto = 0;
-                document.getElementById("feitas").innerHTML = totalQuestoesFeitas;
-                document.getElementById("campoResposta").innerHTML = "Errado. A resposta correta é alternativa '" + respostaGlobal + "'";
+                arquivo = arquivo.slice(1, -1);
+                arquivo = arquivo + "," + JSON.stringify(questao, null, 4);
+                arquivo = "[" + arquivo + "]";
             }
-            console.log("1");
-            if (certasDireto == 10) {
-                showElement();
-                await sleep(2000);
-                hideElement();
-                certasDireto = 0;
-            }
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
-    
-    async function showElement() {
-        var element = document.getElementById("box");
-        element.style.display = "inline";
-        element.style.bottom = "25%"; // Move to the top
-        element.style.visibility = "visible";  // Make it visible
-        element.style.opacity = "1";
-    }
-    
-    // Function to hide the element by moving it back down
-    async function hideElement() {
-      var element = document.getElementById("box");
-      element.style.bottom = "-75%"; // Move it back off-screen
-      await sleep(1000);
-      element.style.visibility = "hidden";  // Hide it
-      element.style.opacity = "0";
-      element.style.display = "none";
-    }
 
-    function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-</script>
+            // atualizando a página
+            document.getElementById("arquivo").value = arquivo;
+        }
+    </script>
 </body>
 </html>
