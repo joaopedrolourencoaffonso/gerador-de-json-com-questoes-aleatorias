@@ -102,13 +102,24 @@
 
     <script>
         async function addQuestao() {
-            // pegando os valores dos campos
+            // pegando e parseando os valores dos campos
             let pergunta = document.getElementById(`pergunta`).value;
+            pergunta = pergunta.replace(/!/g, '\"');
+            
             let alternativaA = document.getElementById(`alternativaA`).value;
+            alternativaA = alternativaA.replace(/!/g, '\"');
+
             let alternativaB = document.getElementById(`alternativaB`).value;
+            alternativaB = alternativaB.replace(/!/g, '\"');
+
             let alternativaC = document.getElementById(`alternativaC`).value;
+            alternativaC = alternativaC.replace(/!/g, '\"');
+
             let alternativaD = document.getElementById(`alternativaD`).value;
+            alternativaD = alternativaD.replace(/!/g, '\"');
+
             let resposta = document.getElementById(`resposta`).value;
+            resposta = resposta.replace(/!/g, '\"');
 
             // escrevendo no console (para testes)
             console.log(pergunta, alternativaA, alternativaB, alternativaC, alternativaD, resposta);
