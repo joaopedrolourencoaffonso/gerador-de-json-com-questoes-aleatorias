@@ -74,8 +74,8 @@
 <body>
     <div class="left-half">
         <div class="left-box">
-            Texto da pergunta<br>
-            <textarea id="pergunta" name="pergunta" rows="4" cols="50" placeholder="Qual é a raiz quadrada de 25?"></textarea>
+            Enunciado da questão<br>
+            <textarea id="enunciado" name="enunciado" rows="4" cols="50" placeholder="Qual é a raiz quadrada de 25?"></textarea>
             <p>Alternativa A:<br>
             <textarea id="alternativaA" name="alternativaA" rows="1" cols="50" placeholder="3"></textarea>
             <p>Alternativa B:</p>
@@ -103,8 +103,8 @@
     <script>
         async function addQuestao() {
             // pegando e parseando os valores dos campos
-            let pergunta = document.getElementById(`pergunta`).value;
-            pergunta = pergunta.replace(/!/g, '\"');
+            let enunciado = document.getElementById(`enunciado`).value;
+            enunciado = enunciado.replace(/!/g, '\"');
             
             let alternativaA = document.getElementById(`alternativaA`).value;
             alternativaA = alternativaA.replace(/!/g, '\"');
@@ -122,11 +122,11 @@
             resposta = resposta.replace(/!/g, '\"');
 
             // escrevendo no console (para testes)
-            console.log(pergunta, alternativaA, alternativaB, alternativaC, alternativaD, resposta);
+            console.log(enunciado, alternativaA, alternativaB, alternativaC, alternativaD, resposta);
 
             // modelo de questão em json
             let questao = {
-                "pergunta": pergunta,
+                "enunciado": enunciado,
                     "a": alternativaA,
                     "b": alternativaB,
                     "c": alternativaC,
